@@ -26,42 +26,50 @@
 
     </div>
     <script>
-        // Commit
         async function getData() {
-            const typeVal = document.getElementById("type").value;
             const limitVal = document.getElementById("limit").value;
-
+            const typeVal = document.getElementById("type").value;
             try {
-                // issue an axios get request to "/data" and pass in the required parameters
-                const response = await axios.get('/data', {
+                //issue an axios get request to "/data" and pass in the required parameters
+                const response = await axios.get("/data", {
                     "params": {
                         "type": typeVal,
                         "limit": limitVal
                     }
-                });
-                renderTable(response.data);
-            }
-            catch (error) {
-                console.error(error);
-                document.getElementById("result").innerText = 'Error fetching data.'
+                })
+                createTable(response.data);
+            } catch (error) {
+                console.log(error);
             }
         }
 
-        function renderTable(dataObj) {
+        function createTable(dataObj) {
             const resultDiv = document.getElementById("result");
             //clear previous content
             while (resultDiv.firstChild) {
                 resultDiv.firstChild.remove();
             }
-
-            //create h2 element (header showing type)
+            //create h2 element
             const h2Elem = document.createElement("h2");
             const h2Val = dataObj["type"];
             h2Elem.innerText = h2Val;
             resultDiv.appendChild(h2Elem);
-
+            //create table element
+            /*
+            <table class="table">
+                <tbody>
+                    <tr>
+                        <th>heading 1</th>
+                        <th>heading 2</th>
+                    </tr>
+                    <tr>
+                        <td></td>
+                    </tr>
+                </tbody>
+            </table>
+            */
             const tableElem = document.createElement("table");
-            tableElem.className = "table"; //bootstrap class
+            tableElem.className = "table";
             const tBodyElem = document.createElement("tbody");
             //create table heading row
             const trElem = document.createElement("tr");
@@ -74,11 +82,11 @@
             }
             tBodyElem.appendChild(trElem);
 
-            // create inner content of table
+            //create the inner content of table
             for (let i = 0; i < dataObj["records"].length; i++) {
                 const trElem = document.createElement("tr");
                 for (let j = 0; j < tblHeadings.length; j++) {
-                    const tdVal = dataObj["records"][i][tblHeadings[j]];
+                    const tdVal = dataObj["records"][i][tblHeadings[j]]
                     const tdElem = document.createElement("td");
                     tdElem.innerText = tdVal;
                     trElem.appendChild(tdElem);
